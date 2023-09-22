@@ -1,0 +1,147 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Dec  3 14:19:38 2022
+
+@author: Admin
+"""
+import streamlit as st
+from annotated_text import annotated_text
+from os import rename
+import sys
+from keras.models import load_model
+from keras.preprocessing import image
+from keras.models import load_model
+import numpy as np
+import keras.utils as image
+import time
+#try :
+st.set_page_config(page_title='ChloroGaurdian', page_icon='https://i.postimg.cc/wBS38n5z/yay-stealing.png')
+st.markdown(
+    """
+    <style>
+@font-face {
+  font-family: 'Comfortaa', cursive;
+  font-style: bold;
+  font-weight: 750;
+  src: url("https://fonts.googleapis.com/css2?family=Cinzel&display=swap") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+html, body, [class*="css"]  {
+font-family: 'Comfortaa', cursive;
+font-size: 23px;
+}
+</style>
+
+    """, 
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+     f"""
+     <style>
+     .stApp {{
+         background: url("https://i.postimg.cc/02qVc3DT/Whats-App-Video-2023-09-22-at-14-43-59.gif");
+         background-size: cover
+     }}
+     </style>
+     """,
+     unsafe_allow_html=True
+)
+model_path = "CHLORO_GUARDIAN/model_4.hd5"
+model = load_model(model_path)
+st.markdown(
+     f"""
+     <style>
+     .stApp {{
+         background: url("https://i.postimg.cc/tgy7wv1s/bacggron-overlay.png");
+         background-size: cover
+     }}
+     </style>
+     """,
+     unsafe_allow_html=True
+ )
+
+st.image('https://i.postimg.cc/1zGf0tbR/yay-stealing-but-white.png', width = 50)
+st.image("https://i.postimg.cc/wjSN7BRm/chloroguardian-clean-Dirty-Yellow.png")
+annotated_text(('Choose how you would like to share your image','#xxyyzz'))
+form = st.form('Blah')
+pic_opt = st.radio('//OPTIONS', ['Upload', 'Camera'])
+#submit = form.form_submit_button('Submit')
+#if submit:
+if pic_opt == 'Camera':
+    pic = st.camera_input(label = ':leaf:', label_visibility="collapsed")
+else : pic = st.file_uploader('//CHOOSE JPG/PNG ONLY')
+if pic is not None:
+    var = st.empty()
+    st.image(pic, width = 250)
+    var.image('https://i.postimg.cc/SQC9TPxp/loading-transparent.gif', width=200)
+    image_path = pic
+
+    # Load and preprocess the image for prediction
+    img = image.load_img(image_path, target_size=(224, 224))
+    img = image.img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = img / 255.0  # Rescale the image to values between 0 and 1
+
+    # Make predictions
+    predictions = model.predict(img)
+
+    # dataset of all the deseases and related information
+    plant_disease_dictionary = {'Apple scab': ('Cure: Fungicide Myclobutanil or application of 5% urea solution right before leaf drop.', 'Prevention: Raking and discarding fallen leaves, proper pruning to allow light and air.'),
+                                'Apple Black Rot': ('Cure: Correctly timed fungicide sprays.', 'Prevention: Reducing amount of moisture and providing great air circulation.'),
+                                'Cedar Apple rust': ('Cure: Spraying plant with copper', 'Prevention: Usage of fungicides containing myclobutanil or copper or sulfur. '),
+                                'Apple healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Blueberry Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Cherry Powdery Mildew': ('Cure: Spraying plant with solution of baking soda and liquid soap.', 'Prevention: Thin out existing susceptible plants to improve airflow within the plants. Locate plants in appropriate sunlight.'),
+                                'Cherry Healthy (inc. sour)': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Corn Cercospora leaf spot/Gray Leaf Spot': (' Cure: QoI fungicide azoxystrobin.', 'Prevention: Reduce thatch layer. Irrigate deeply but infrequently. Avoid medium to high nitrogen level fertilizers.'),
+                                'Corn Common Rust': ('Cure: Fungicides containing mancozeb, pyraclostrobin, etc.', 'Prevention: Space plants to improve air circulation. Avoid wetting leaves when watering.'),
+                                'Corn Northern Leaf Blight': ('Cure: Delaro 325 SC Fungicide. Prevention: Choosing resistant hybrids. Reducing previous corn residue.'),
+                                'Corn Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Grape Black Rot': ('Cure: Correctly timed fungicide sprays.', 'Prevention: Reducing amount of moisture and providing great air circulation.'),
+                                'Grape Esca/Measles': ('Soak dormant cuttings in hot water for 30min at about 50 degrees Celsius.', 'Prevention: Use alternative pruning methods such as delayed pruning or double pruning. Avoid pruning during heavy rainfall when spores are likely to be dispersed'),
+                                'Grape leaf blight/Isariopsis leaf spot': ('Cure: No cure', 'Prevention: Measures for controlling and preventing blights typically involve the destruction of the infected plant parts; use of disease-free seed or stock and resistant varieties; crop rotation, pruning and spacing of plants for better air circulation; controlling pests that carry the fungus from plant to plant; avoidance of overhead watering and working among wet plants'),
+                                'Grape Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Citrus greening': ('Cure: No cure', 'Prevention: In citrus-producing areas with little or no HLB incidence, early detection and removal of infected trees are critical to prevent spread of the disease. However, it is difficult to identify HLB-infected trees because they may remain asymptomatic for months to years after infection. Control of the ACP vector and removal of diseased trees are key to maintaining productive citrus.'),
+                                'Peach Bacterial Spot': ('Cure: No cure.', 'Prevention: Using pathogen free seeds. Usage of thick layer of mulch to cover soil and prevent growth of weeds and disease pathogen from splashing back up to the leaves.'),
+                                'Peach healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Pepper-Bell Bacterial Spot': ('Cure: No cure.', 'Prevention: Using pathogen free seeds. Usage of thick layer of mulch to cover soil and prevent growth of weeds and disease pathogen from splashing back up to the leaves.'),
+                                'Pepper-Bell Healthy': ('Cure:', 'Prevention:'), 'Potato Early Blight': ('Cure: Application of fungicides containing copper.', 'Prevention: Disinfect pruning gear. Improve air circulation.'),
+                                'Potato Late Blight': ('Cure: Applying copper-based fungicide.', 'Prevention: Eliminating cull piles and volunteer potatoes, using proper harvesting and storage practices. Applying fungicides when necessary.'),
+                                'Potato Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Raspberry Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Soybean Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Squash Powdery Mildew': ('Cure: Spraying plant with solution of baking soda and liquid soap.', 'Prevention: Thin out existing susceptible plants to improve airflow within the plants. Locate plants in appropriate sunlight.'),
+                                'Strawberry Leaf scorch': ('Cure: No cure.', 'Prevention: Proper watering and mulching. Appropriate pruning and watering.'),
+                                'Strawberry Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care'),
+                                'Tomato Bacterial Spot': ('Cure: No cure.', 'Prevention: Using pathogen free seeds. Usage of thick layer of mulch to cover soil and prevent growth of weeds and disease pathogen from splashing back up to the leaves.'),
+                                'Tomato Early Blight': ('Cure: Application of fungicides containing copper.', 'Prevention: Disinfect pruning gear. Improve air circulation.'),
+                                'Tomato Late Blight': ('Cure: Applying copper-based fungicide.', 'Prevention: Eliminating cull piles and volunteer potatoes, using proper harvesting and storage practices. Applying fungicides when necessary.'),
+                                'Tomato leaf mold': ('Cure: Fungi Acremonium strictum, Dicyma pulvinata are antagonistic to the pathogen and can be used to reduce its spread', 'Prevention: Use disease free seeds, plant early to reduce disease severity avoid excessive nitrogen fertilizatiton.'),
+                                'Tomato Septoria Leaf spot': ('Cure: Removal of diseased leaves Appropriate usage of fungicides', 'Prevention: Choosing resistant hybrids. Allowing good air circulation. Control weeds. Make use of crop rotation.'),
+                                'Tomato Spider mite': ('Cure:', 'Prevention:'),
+                                'Tomato Target spot': ('Cure: Azoxystrobin and pyraclostrobin.', 'Prevention: Providing proper airflow, pruning and avoiding over usage of nitrogen fertilizers.'),
+                                'Tomato Yellow Leaf curl virus': ('Cure: No cure.', 'Prevention: Select resistant seed varieties, plant immediately after any tomato free or true winter season.'),
+                                'Tomato mosaic virus': ('Cure: No cure.', 'Prevention: Control weeds, usage of resistant viruses. Covering plants with a floating row cover or aluminium foil mulches to prevent insects for infecting.'),
+                                'Tomato Healthy': ('Cure: No need of a cure', 'Prevention: Keep on going with the good care')}
+
+    # If you have multiple classes, you can get the class labels and corresponding probabilities
+    class_labels = []  # Replace with your class labels
+    for i in plant_disease_dictionary:
+        class_labels.append(i)
+
+    predicted_class = np.argmax(predictions, axis=1)
+    predicted_label = class_labels[predicted_class[0]]
+    cure = plant_disease_dictionary[predicted_label][0]
+    prevention = plant_disease_dictionary[predicted_label][1]
+
+    print(len(plant_disease_dictionary))
+    st.warning('predicted disease: ' + predicted_label)
+    st.success(cure)
+    st.success(prevention)
+    var.empty()
+
+# Load and preprocess the image for prediction
+
+#except : pass
